@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HDFC Bank – Support Center</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: Arial, sans-serif; font-size:12px; background:#f0f2f5; color:#222; height:100vh; overflow:hidden; display:flex; flex-direction:column; }
+
+/* TOP BAR */
+.topbar { background:#1c3664; height:40px; min-height:40px; display:flex; align-items:center; justify-content:space-between; padding:0 12px; }
+.topbar-left { display:flex; align-items:center; gap:8px; }
+.hamburger { display:flex; flex-direction:column; gap:3px; cursor:pointer; }
+.hamburger span { display:block; width:16px; height:2px; background:#fff; }
+.topbar-brand { color:#fff; font-size:12px; font-weight:bold; letter-spacing:0.5px; }
+.topbar-right { display:flex; align-items:center; gap:6px; }
+.hdfc-logo-box { background:#fff; border-radius:2px; padding:2px 8px; display:flex; align-items:center; gap:5px; }
+.hdfc-logo-text { font-size:10px; font-weight:900; color:#1c3664; letter-spacing:0.3px; }
+.hdfc-logo-icon { width:18px; height:18px; background:#e31837; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+.hdfc-logo-icon svg { width:10px; height:10px; fill:#fff; }
+
+/* SESSION BAR */
+.sessionbar { background:#0f2340; height:32px; min-height:32px; display:flex; align-items:stretch; border-bottom:1px solid #0a1a30; }
+.session-tab { display:flex; align-items:center; gap:6px; padding:0 14px; font-size:11px; color:#aac4df; border-right:1px solid #1c3664; cursor:pointer; white-space:nowrap; }
+.session-tab.active { background:#f0f2f5; color:#222; }
+.session-tab .close-x { font-size:14px; color:#aac4df; line-height:1; margin-left:4px; }
+.session-tab.active .close-x { color:#666; }
+.session-add-btn { width:32px; display:flex; align-items:center; justify-content:center; color:#aac4df; font-size:18px; cursor:pointer; border-right:1px solid #1c3664; }
+.session-agent { margin-left:auto; display:flex; align-items:center; padding:0 14px; font-size:10px; color:#7a9bbf; }
+
+/* SUBNAV */
+.subnav { background:#fff; height:34px; min-height:34px; border-bottom:2px solid #e0e4ea; display:flex; align-items:stretch; padding:0 0 0 4px; }
+.subnav-item { display:flex; align-items:center; padding:0 14px; font-size:11.5px; color:#555; cursor:pointer; white-space:nowrap; border-bottom:2px solid transparent; margin-bottom:-2px; user-select:none; }
+.subnav-item:hover { color:#1c3664; }
+.subnav-item.active { color:#1c3664; border-bottom-color:#1c3664; font-weight:bold; }
+
+/* BODY LAYOUT */
+.body-wrap { flex:1; display:flex; overflow:hidden; }
+
+/* LEFT PANEL */
+.left-panel { width:214px; min-width:214px; background:#fff; border-right:1px solid #dde3ec; display:flex; flex-direction:column; overflow:hidden; }
+.left-panel-header { padding:8px 10px 4px; font-size:11px; font-weight:bold; color:#333; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #eee; }
+.left-panel-count { font-size:10px; background:#e8edf5; border-radius:8px; padding:1px 6px; color:#555; font-weight:normal; }
+.left-search { margin:6px 8px; border:1px solid #cdd5df; border-radius:3px; padding:4px 8px; font-size:11px; width:calc(100% - 16px); color:#555; background:#f8f9fc; }
+.left-search:focus { outline:none; border-color:#1c3664; }
+.biller-row { padding:7px 10px; border-bottom:1px solid #f0f2f5; border-left:3px solid transparent; cursor:pointer; }
+.biller-row:hover { background:#f5f8ff; }
+.biller-row.active { background:#ebf0f9; border-left-color:#1c3664; }
+.biller-name { font-size:11.5px; font-weight:bold; color:#1a1a1a; margin-bottom:1px; }
+.biller-acno { font-size:10px; color:#888; font-family:monospace; }
+.biller-tags { display:flex; gap:4px; margin-top:3px; flex-wrap:wrap; }
+.btag { font-size:9px; font-weight:bold; padding:1px 5px; border-radius:2px; text-transform:uppercase; letter-spacing:0.2px; }
+.btag-biller { background:#dce8ff; color:#1a56c4; }
+.btag-payee  { background:#d4edda; color:#1a7a34; }
+.btag-failed { background:#fde8e8; color:#c0392b; }
+
+/* MAIN CONTENT */
+.main-content { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+
+/* CONTENT HEADER */
+.content-header { background:#fff; border-bottom:1px solid #dde3ec; padding:10px 16px 0; flex-shrink:0; }
+.content-title { font-size:13px; font-weight:bold; color:#1c3664; }
+.content-acno { font-size:10.5px; color:#888; margin-top:1px; font-family:monospace; }
+.content-tabs { display:flex; margin-top:8px; }
+.ctab { padding:6px 16px; font-size:11.5px; color:#555; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; user-select:none; }
+.ctab:hover { color:#1c3664; }
+.ctab.active { color:#1c3664; border-bottom-color:#1c3664; font-weight:bold; }
+.fail-badge { background:#e31837; color:#fff; border-radius:8px; padding:0px 5px; font-size:9px; margin-left:4px; font-weight:bold; }
+
+/* SCROLLABLE BODY */
+.content-body { flex:1; overflow-y:auto; padding:12px 16px; }
+
+/* SECTIONS */
+.section-block { background:#fff; border:1px solid #dde3ec; border-radius:3px; margin-bottom:10px; }
+.section-head { padding:7px 12px; background:#f4f6fa; border-bottom:1px solid #dde3ec; font-size:11px; font-weight:bold; color:#1c3664; display:flex; align-items:center; justify-content:space-between; }
+.section-body { padding:10px 12px; }
+
+/* KV TABLE */
+.kv-table { width:100%; border-collapse:collapse; }
+.kv-table td { padding:4px 6px; font-size:11px; vertical-align:top; }
+.kv-table td:first-child { color:#777; width:44%; font-size:10.5px; }
+.kv-table td:last-child { color:#1a1a1a; font-weight:500; }
+.kv-table tr { border-bottom:1px solid #f2f4f7; }
+.kv-table tr:last-child { border-bottom:none; }
+
+/* DATA TABLE */
+.dtable { width:100%; border-collapse:collapse; font-size:11px; }
+.dtable th { padding:6px 10px; background:#f4f6fa; color:#555; font-weight:bold; text-align:left; border-bottom:1px solid #dde3ec; font-size:10.5px; white-space:nowrap; }
+.dtable td { padding:7px 10px; border-bottom:1px solid #f0f2f5; color:#222; vertical-align:middle; }
+.dtable tr:last-child td { border-bottom:none; }
+.dtable tbody tr:hover td { background:#f8faff; }
+.mono { font-family:monospace; font-size:10.5px; color:#4a5a6a; }
+.lnk { color:#1a56c4; cursor:pointer; }
+.lnk:hover { text-decoration:underline; }
+
+/* STATUS PILLS */
+.spill { display:inline-flex; align-items:center; gap:3px; padding:2px 7px; border-radius:9px; font-size:10px; font-weight:bold; white-space:nowrap; }
+.spill::before { content:''; width:5px; height:5px; border-radius:50%; flex-shrink:0; }
+.sp-active    { background:#e6f4ea; color:#1a7e34; }    .sp-active::before    { background:#1a7e34; }
+.sp-passed    { background:#e3eeff; color:#1a56c4; }    .sp-passed::before    { background:#1a56c4; }
+.sp-failed    { background:#fde8e8; color:#c0392b; }    .sp-failed::before    { background:#c0392b; }
+.sp-deleted   { background:#f2f3f5; color:#777;    }    .sp-deleted::before   { background:#aaa; }
+.sp-completed { background:#e6f4ea; color:#1a7e34; }    .sp-completed::before { background:#1a7e34; }
+.sp-pending   { background:#fff4e0; color:#b45309; }    .sp-pending::before   { background:#b45309; }
+.sp-paused    { background:#f3e8ff; color:#7c3aed; }    .sp-paused::before    { background:#7c3aed; }
+.sp-refunded  { background:#e3eeff; color:#1a56c4; }    .sp-refunded::before  { background:#1a56c4; }
+
+/* ALERT */
+.alert-err { border:1px solid #f5c6cb; border-left:4px solid #c0392b; background:#fff5f5; border-radius:3px; padding:9px 12px; margin-bottom:10px; display:flex; gap:9px; align-items:flex-start; }
+.alert-err-icon { font-size:14px; flex-shrink:0; margin-top:1px; }
+.alert-err-title { font-size:11.5px; font-weight:bold; color:#8b0000; margin-bottom:2px; }
+.alert-err-desc  { font-size:10.5px; color:#7f1d1d; line-height:1.55; }
+
+/* AUTOPAY ITEMS */
+.ap-item { border:1px solid #dde3ec; border-radius:3px; margin-bottom:8px; background:#fff; }
+.ap-item.active-ap  { border-color:#a8d5b5; }
+.ap-item.failed-ap  { border-color:#f5aaaa; background:#fff9f9; }
+.ap-item.deleted-ap { opacity:0.65; }
+.ap-head { padding:8px 12px; background:#f8f9fc; border-bottom:1px solid #e8edf5; display:flex; align-items:center; justify-content:space-between; border-radius:3px 3px 0 0; }
+.ap-head.active-ap-head  { background:#f0faf4; }
+.ap-head.failed-ap-head  { background:#fef2f2; }
+.ap-title { font-size:11.5px; font-weight:bold; color:#1a1a1a; }
+.ap-sub   { font-size:10px; color:#888; margin-top:1px; }
+.ap-body  { padding:10px 12px; }
+.ap-grid  { display:grid; grid-template-columns:repeat(4,1fr); gap:8px 12px; }
+.ap-kv    { display:flex; flex-direction:column; gap:2px; }
+.ap-lbl   { font-size:9.5px; color:#888; text-transform:uppercase; letter-spacing:0.3px; }
+.ap-val   { font-size:11px; color:#1a1a1a; font-weight:500; }
+.fail-reason { margin-top:8px; padding:6px 9px; background:#fde8e8; border-radius:3px; border-left:3px solid #c0392b; font-size:10.5px; color:#7f1d1d; display:flex; gap:6px; align-items:flex-start; }
+
+/* SECTION LABEL */
+.sec-label { font-size:10.5px; font-weight:bold; color:#555; text-transform:uppercase; letter-spacing:0.4px; margin:10px 0 6px; }
+.sec-label:first-child { margin-top:0; }
+
+/* PAGINATION */
+.pager { display:flex; align-items:center; gap:4px; padding:7px 12px; border-top:1px solid #e8edf5; font-size:11px; color:#555; background:#fafbfc; }
+.pager-btn { width:22px; height:22px; border:1px solid #cdd5df; border-radius:2px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; background:#fff; font-size:11px; color:#555; }
+.pager-btn.cur { background:#1c3664; color:#fff; border-color:#1c3664; }
+.pager-right { margin-left:auto; display:flex; align-items:center; gap:4px; font-size:10.5px; color:#888; }
+
+/* EXPANDABLE ROWS */
+.rel-acct-row { cursor:pointer; }
+.rel-acct-row:hover td { background:#f5f8ff !important; }
+.rel-acct-row.selected td { background:#ebf0f9 !important; }
+.rel-acct-expand { background:#f8f9fc; border-top:1px solid #e8edf5; padding:12px 14px; }
+
+/* HIDDEN */
+.tab-pane { display:none; }
+.tab-pane.active { display:block; }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width:4px; height:4px; }
+::-webkit-scrollbar-track { background:#f0f2f5; }
+::-webkit-scrollbar-thumb { background:#c8d0dc; border-radius:3px; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="hamburger"><span></span><span></span><span></span></div>
+    <span class="topbar-brand">SUPPORT CENTER</span>
+  </div>
+  <div class="topbar-right">
+    <div class="hdfc-logo-box">
+      <span class="hdfc-logo-text">HDFC BANK</span>
+      <div class="hdfc-logo-icon">
+        <svg viewBox="0 0 10 10"><polygon points="5,1 9,9 1,9"/></svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SESSION BAR -->
+<div class="sessionbar">
+  <div class="session-tab active">
+    <div>
+      <div style="font-size:11px;font-weight:bold;color:#222;">Anirudh AK</div>
+      <div style="font-size:9.5px;color:#888;font-family:monospace;">T721542-5445-459 anik...</div>
+    </div>
+    <span class="close-x">×</span>
+  </div>
+  <div class="session-add-btn">+</div>
+  <div class="session-agent">Agent: Priya Sharma &nbsp;|&nbsp; Queue: RCBP L2</div>
+</div>
+
+<!-- SUBNAV -->
+<div class="subnav">
+  <div class="subnav-item" onclick="switchMain('account',this)">Account Holder</div>
+  <div class="subnav-item" onclick="switchMain('bundles',this)">Bundles</div>
+  <div class="subnav-item" onclick="switchMain('transactions',this)">Transactions</div>
+  <div class="subnav-item active" id="nav-rcbp" onclick="switchMain('rcbp',this)">RCBP</div>
+  <div class="subnav-item" id="nav-rel" onclick="switchMain('rel',this)">HDFC Relationship</div>
+  <div class="subnav-item">Payment Instruments</div>
+  <div class="subnav-item">Notifications</div>
+  <div class="subnav-item">Audit Logs</div>
+  <div class="subnav-item">Service Requests</div>
+</div>
+
+<!-- BODY -->
+<div class="body-wrap">
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <div class="left-panel-header">
+      User Biller Account <span class="left-panel-count">3</span>
+    </div>
+    <input class="left-search" placeholder="Search..." type="text">
+
+    <div class="biller-row" onclick="selectBiller(this,'pixel')">
+      <div class="biller-name">HDFC Pixel Credit Card</div>
+      <div class="biller-acno">4072534-5645-5646</div>
+      <div class="biller-tags">
+        <span class="btag btag-biller">BILLER</span>
+        <span class="btag btag-failed">⚠ AUTOPAY FAILED</span>
+      </div>
+    </div>
+
+    <div class="biller-row active" onclick="selectBiller(this,'bescom')">
+      <div class="biller-name">BESCOM</div>
+      <div class="biller-acno">1231231231928</div>
+      <div class="biller-tags">
+        <span class="btag btag-biller">BILLER</span>
+      </div>
+    </div>
+
+    <div class="biller-row" onclick="selectBiller(this,'vodafone')">
+      <div class="biller-name">Vodafone Idea</div>
+      <div class="biller-acno">0270331985</div>
+      <div class="biller-tags">
+        <span class="btag btag-payee">PAYEE</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+
+    <!-- ══════════════ RCBP PANE ══════════════ -->
+    <div id="pane-rcbp" style="display:flex;flex-direction:column;flex:1;overflow:hidden;">
+      <div class="content-header">
+        <div class="content-title" id="rcbp-title">BESCOM</div>
+        <div class="content-acno" id="rcbp-acno">Account number: 1231231231928</div>
+        <div class="content-tabs">
+          <div class="ctab active" onclick="switchCTab('details',this)">Details</div>
+          <div class="ctab" onclick="switchCTab('history',this)">History</div>
+          <div class="ctab" onclick="switchCTab('autopay',this)">Autopay <span class="fail-badge" id="ap-fail-badge">1 FAILED</span></div>
+        </div>
+      </div>
+      <div class="content-body">
+
+        <!-- DETAILS TAB -->
+        <div id="ct-details" class="tab-pane active">
+
+          <div id="det-alert" class="alert-err">
+            <div class="alert-err-icon">⚠</div>
+            <div>
+              <div class="alert-err-title">AutoPay Failed – Action Required</div>
+              <div class="alert-err-desc">The scheduled autopay for <strong>BESCOM</strong> on <strong>26 Jun 2025</strong> failed. Reason: <em>Insufficient Funds</em>. Bill of <strong>₹1,000.00</strong> is unpaid. Ask the customer to ensure sufficient balance in the linked HDFC account or make a manual payment.</div>
+            </div>
+          </div>
+
+          <!-- Active Bill -->
+          <div class="section-block">
+            <div class="section-head">Active Bill</div>
+            <div class="section-body" style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
+              <table class="kv-table">
+                <tr><td>Bill Created</td><td>18-May-2025</td></tr>
+                <tr><td>Due Date</td><td style="color:#c0392b;font-weight:bold;">12th May 2025</td></tr>
+              </table>
+              <table class="kv-table">
+                <tr><td>Bill Amount</td><td style="font-weight:bold;">₹1,000.00</td></tr>
+                <tr><td>Bill Status</td><td><span class="spill sp-pending">Not Paid</span></td></tr>
+              </table>
+            </div>
+          </div>
+
+          <!-- Active AutoPay Details -->
+          <div class="section-block">
+            <div class="section-head">Active AutoPay Details</div>
+            <div class="section-body">
+              <table class="kv-table">
+                <tr><td>Debit Account</td><td>HDFC Bank Savings Account – ···3292</td></tr>
+                <tr><td>Payment Instrument</td><td>HDFC Account</td></tr>
+                <tr><td>Max Value</td><td>₹5,000.00</td></tr>
+                <tr><td>Pay Amount</td><td>Bill Amount</td></tr>
+                <tr><td>Execute On</td><td>Due Date</td></tr>
+              </table>
+            </div>
+          </div>
+
+          <!-- Last 3 Payments -->
+          <div class="section-block">
+            <div class="section-head">Last 3 Payments</div>
+            <table class="dtable">
+              <thead>
+                <tr>
+                  <th>Transaction ID</th>
+                  <th>Date</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>AutoPay</th>
+                  <th>Instrument</th>
+                  <th>Account</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="mono lnk">703971043772</span></td>
+                  <td>26 Jun 2025</td>
+                  <td>₹1,000.00</td>
+                  <td><span class="spill sp-failed">Failed</span></td>
+                  <td>Yes</td>
+                  <td>HDFC Account</td>
+                  <td class="mono">Savings ···3292</td>
+                </tr>
+                <tr>
+                  <td><span class="mono lnk">NYTIH7P43FM3M</span></td>
+                  <td>4 May 2025</td>
+                  <td>₹1,000.00</td>
+                  <td><span class="spill sp-completed">Completed</span></td>
+                  <td>Yes</td>
+                  <td>HDFC Account</td>
+                  <td class="mono">Savings ···3292</td>
+                </tr>
+                <tr>
+                  <td><span class="mono lnk">TYGBR9974M4GT</span></td>
+                  <td>4 Apr 2025</td>
+                  <td>₹736.00</td>
+                  <td><span class="spill sp-completed">Completed</span></td>
+                  <td>Yes</td>
+                  <td>HDFC Account</td>
+                  <td class="mono">Savings ···3292</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+        <!-- HISTORY TAB -->
+        <div id="ct-history" class="tab-pane">
+          <div class="section-block">
+            <div class="section-head">
+              Transaction History
+              <select style="border:1px solid #cdd5df;border-radius:2px;padding:2px 6px;font-size:11px;color:#555;background:#fff;">
+                <option>All Status</option><option>Completed</option><option>Failed</option><option>Pending</option>
+              </select>
+            </div>
+            <table class="dtable">
+              <thead>
+                <tr>
+                  <th>Transaction ID</th>
+                  <th>Date &amp; Time</th>
+                  <th>Amount</th>
+                  <th>Instrument</th>
+                  <th>Account</th>
+                  <th>AutoPay</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="mono lnk">703971043772</span></td>
+                  <td>26 Jun 2025, 08:32</td><td>₹1,000.00</td>
+                  <td>HDFC Account</td><td class="mono">Savings ···3292</td><td>Yes</td>
+                  <td><span class="spill sp-failed">Failed</span></td>
+                </tr>
+                <tr>
+                  <td><span class="mono lnk">NYTIH7P43FM3M</span></td>
+                  <td>4 May 2025, 07:55</td><td>₹1,000.00</td>
+                  <td>HDFC Account</td><td class="mono">Savings ···3292</td><td>Yes</td>
+                  <td><span class="spill sp-completed">Completed</span></td>
+                </tr>
+                <tr>
+                  <td><span class="mono lnk">TYGBR9974M4GT</span></td>
+                  <td>4 Apr 2025, 08:01</td><td>₹736.00</td>
+                  <td>HDFC Account</td><td class="mono">Savings ···3292</td><td>Yes</td>
+                  <td><span class="spill sp-completed">Completed</span></td>
+                </tr>
+                <tr>
+                  <td><span class="mono lnk">YUMG76754327YG</span></td>
+                  <td>4 Mar 2025, 10:00</td><td>₹1,000.00</td>
+                  <td>Credit Card</td><td class="mono">Pixel CC ···4532</td><td>No</td>
+                  <td><span class="spill sp-refunded">Refunded</span></td>
+                </tr>
+                <tr>
+                  <td><span class="mono lnk">M249G9B75RTA</span></td>
+                  <td>4 Feb 2025, 18:34</td><td>₹16,000.00</td>
+                  <td>Credit Card</td><td class="mono">Pixel CC ···4532</td><td>No</td>
+                  <td><span class="spill sp-failed">Failed</span></td>
+                </tr>
+                <tr>
+                  <td><span class="mono lnk">BHY4TA432VYG</span></td>
+                  <td>4 Jan 2025, 11:00</td><td>₹1,000.00</td>
+                  <td>HDFC Account</td><td class="mono">Savings ···3292</td><td>No</td>
+                  <td><span class="spill sp-completed">Completed</span></td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="pager">
+              12 per page
+              <div class="pager-right">
+                1–6 of 18 &nbsp;
+                <span class="pager-btn">‹</span>
+                <span class="pager-btn cur">1</span>
+                <span class="pager-btn">2</span>
+                <span class="pager-btn">›</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AUTOPAY TAB -->
+        <div id="ct-autopay" class="tab-pane">
+
+          <div class="alert-err">
+            <div class="alert-err-icon">⚠</div>
+            <div>
+              <div class="alert-err-title">AutoPay Execution Failed – 26 Jun 2025</div>
+              <div class="alert-err-desc">Scheduled autopay could not be processed. Reason: <strong>Insufficient Funds</strong> in linked HDFC Savings Account ···3292. ₹1,000.00 remains unpaid. Mandate is still active; next attempt on due date. Agent action: ask customer to ensure sufficient balance or make a manual payment.</div>
+            </div>
+          </div>
+
+          <div class="sec-label">Active AutoPay</div>
+          <div class="ap-item active-ap">
+            <div class="ap-head active-ap-head">
+              <div>
+                <div class="ap-title">BESCOM – Bangalore Electricity Supply Company</div>
+                <div class="ap-sub">Customer Account: 1231231231928 &nbsp;·&nbsp; Executes: Due Date</div>
+              </div>
+              <span class="spill sp-active">Active</span>
+            </div>
+            <div class="ap-body">
+              <div class="ap-grid">
+                <div class="ap-kv"><span class="ap-lbl">Created On</span><span class="ap-val">26 Jun 2023</span></div>
+                <div class="ap-kv"><span class="ap-lbl">Updated On</span><span class="ap-val">26 Jun 2023</span></div>
+                <div class="ap-kv"><span class="ap-lbl">Execute On</span><span class="ap-val">Due Date</span></div>
+                <div class="ap-kv"><span class="ap-lbl">Max Value</span><span class="ap-val">₹5,000.00</span></div>
+                <div class="ap-kv"><span class="ap-lbl">Pay Amount</span><span class="ap-val">Bill Amount</span></div>
+                <div class="ap-kv"><span class="ap-lbl">Debit Account</span><span class="ap-val">HDFC Savings ···3292</span></div>
+                <div class="ap-kv"><span class="ap-lbl">Payment Instrument</span><span class="ap-val">HDFC Account</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sec-label" style="margin-top:12px;">Failed Execution Attempts <span style="font-size:10px;color:#c0392b;font-weight:normal;margin-left:6px;">2 of 3 retries exhausted · ₹1,000.00 unpaid</span></div>
+
+          <!-- Attempt 1 -->
+          <div class="ap-item failed-ap" style="margin-bottom:6px;">
+            <div class="ap-head failed-ap-head">
+              <div>
+                <div class="ap-title">Attempt 1 &nbsp;<span style="font-size:10px;font-weight:normal;color:#888;">26 Jun 2025, 08:32 AM</span></div>
+                <div class="ap-sub">Transaction ID: <span class="mono lnk" style="font-size:10.5px;">703971043772</span></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span style="background:#fde8e8;color:#c0392b;padding:2px 8px;border-radius:9px;font-weight:bold;font-size:10px;">Retry 1 / 3</span>
+                <span class="spill sp-failed">Failed</span>
+              </div>
+            </div>
+            <div class="ap-body">
+              <div class="fail-reason">⚠&nbsp;<strong>Failure Reason:</strong>&nbsp;Insufficient Funds in linked HDFC Savings Account ···3292.</div>
+              <div class="ap-grid" style="margin-top:10px;grid-template-columns:repeat(3,1fr);">
+                <div class="ap-kv"><span class="ap-lbl">Bill Amount</span><span class="ap-val" style="color:#c0392b;font-weight:bold;">₹1,000.00 (Unpaid)</span></div>
+                <div class="ap-kv"><span class="ap-lbl">Debit Account</span><span class="ap-val">HDFC Savings ···3292</span></div>
+                <div class="ap-kv"><span class="ap-lbl">Payment Instrument</span><span class="ap-val">HDFC Account</span></div>
+                <div class="ap-kv"><span class="ap-lbl">Record Type</span><span class="ap-val">DEBIT</span></div>
+                <div class="ap-kv"><span class="ap-lbl">Payment Status</span><span class="ap-val">Failed</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Attempt 2 -->
+          <div class="ap-item failed-ap">
+            <div class="ap-head failed-ap-head">
+              <div>
+                <div class="ap-title">Attempt 2 &nbsp;<span style="font-size:10px;font-weight:normal;color:#888;">27 Jun 2025, 09:15 AM</span></div>
+                <div class="ap-sub">Transaction ID: <span class="mono lnk" style="font-size:10.5px;">703971056891</span></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span style="background:#fde8e8;color:#c0392b;padding:2px 8px;border-radius:9px;font-weight:bold;font-size:10px;">Retry 2 / 3</span>
+                <span class="spill sp-failed">Failed</span>
+              </div>
+            </div>
+            <div class="ap-body">
+              <div class="fail-reason">⚠&nbsp;<strong>Failure Reason:</strong>&nbsp;Insufficient Funds in linked HDFC Savings Account ···3292.</div>
+              <div class="ap-grid" style="margin-top:10px;grid-template-columns:repeat(3,1fr);">
+                <div class="ap-kv"><span class="ap-lbl">Bill Amount</span><span class="ap-val" style="color:#c0392b;font-weight:bold;">₹1,000.00 (Unpaid)</span></div>
+                <div class="ap-kv"><span class="ap-lbl">Debit Account</span><span class="ap-val">HDFC Savings ···3292</span></div>
+                <div class="ap-kv"><span class="ap-lbl">Payment Instrument</span><span class="ap-val">HDFC Account</span></div>
+                <div class="ap-kv"><span class="ap-lbl">Record Type</span><span class="ap-val">DEBIT</span></div>
+                <div class="ap-kv"><span class="ap-lbl">Payment Status</span><span class="ap-val">Failed</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sec-label" style="margin-top:12px;">AutoPay History / Audit Log</div>
+          <div class="section-block">
+            <table class="dtable">
+              <thead>
+                <tr>
+                  <th>Date &amp; Time</th>
+                  <th>Action</th>
+                  <th>Transaction ID</th>
+                  <th>Done By</th>
+                  <th>Instrument</th>
+                  <th>Account</th>
+                  <th>Remarks</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>27 Jun 2025, 09:15</td>
+                  <td><span class="spill sp-failed">Execution Failed</span></td>
+                  <td><span class="mono lnk">703971056891</span></td>
+                  <td>System (AutoPay)</td>
+                  <td>HDFC Account</td>
+                  <td class="mono">Savings ···3292</td>
+                  <td>Insufficient Funds &nbsp;<span style="background:#fde8e8;color:#c0392b;padding:1px 6px;border-radius:9px;font-size:9.5px;font-weight:bold;">Retry 2/3</span></td>
+                </tr>
+                <tr>
+                  <td>26 Jun 2025, 08:32</td>
+                  <td><span class="spill sp-failed">Execution Failed</span></td>
+                  <td><span class="mono lnk">703971043772</span></td>
+                  <td>System (AutoPay)</td>
+                  <td>HDFC Account</td>
+                  <td class="mono">Savings ···3292</td>
+                  <td>Insufficient Funds &nbsp;<span style="background:#fde8e8;color:#c0392b;padding:1px 6px;border-radius:9px;font-size:9.5px;font-weight:bold;">Retry 1/3</span></td>
+                </tr>
+                <tr>
+                  <td>4 May 2025, 07:55</td>
+                  <td><span class="spill sp-completed">Execution Success</span></td>
+                  <td><span class="mono lnk">NYTIH7P43FM3M</span></td>
+                  <td>System (AutoPay)</td>
+                  <td>HDFC Account</td>
+                  <td class="mono">Savings ···3292</td>
+                  <td>₹1,000.00 debited</td>
+                </tr>
+                <tr>
+                  <td>12 Apr 2025, 14:20</td>
+                  <td><span class="spill sp-active">Resumed</span></td>
+                  <td>—</td>
+                  <td>Customer (App)</td>
+                  <td>HDFC Account</td>
+                  <td class="mono">Savings ···3292</td>
+                  <td>AutoPay resumed by customer</td>
+                </tr>
+                <tr>
+                  <td>10 Apr 2025, 09:05</td>
+                  <td><span class="spill sp-paused">Paused</span></td>
+                  <td>—</td>
+                  <td>Customer (App)</td>
+                  <td>HDFC Account</td>
+                  <td class="mono">Savings ···3292</td>
+                  <td>AutoPay paused by customer</td>
+                </tr>
+                <tr>
+                  <td>4 Apr 2025, 08:01</td>
+                  <td><span class="spill sp-completed">Execution Success</span></td>
+                  <td><span class="mono lnk">TYGBR9974M4GT</span></td>
+                  <td>System (AutoPay)</td>
+                  <td>HDFC Account</td>
+                  <td class="mono">Savings ···3292</td>
+                  <td>₹736.00 debited</td>
+                </tr>
+                <tr style="background:#fff9f9;">
+                  <td>15 Jan 2024, 16:44</td>
+                  <td><span class="spill sp-failed">Setup Failed</span></td>
+                  <td>—</td>
+                  <td>Customer (App)</td>
+                  <td>HDFC Account</td>
+                  <td class="mono">Savings ···4817</td>
+                  <td>AutoPay setup failed – account deregistered from PayZapp at time of setup</td>
+                </tr>
+                <tr>
+                  <td>26 Jun 2023, 11:42</td>
+                  <td><span class="spill sp-active">AutoPay Created</span></td>
+                  <td>—</td>
+                  <td>Customer (App)</td>
+                  <td>HDFC Account</td>
+                  <td class="mono">Savings ···3292</td>
+                  <td>Max ₹5,000 · Bill Amount · Due Date</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="sec-label" style="margin-top:12px;">Deleted AutoPays</div>
+          <div class="section-block">
+            <table class="dtable">
+              <thead>
+                <tr>
+                  <th>Biller</th>
+                  <th>Status</th>
+                  <th>Created On</th>
+                  <th>Deleted On</th>
+                  <th>Max Value</th>
+                  <th>Pay Amount</th>
+                  <th>Instrument</th>
+                  <th>Account</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>BESCOM</td>
+                  <td><span class="spill sp-deleted">Deleted</span></td>
+                  <td>26 Jun 2023</td><td>26 Jan 2023</td>
+                  <td>₹3,000.00</td><td>TAD</td>
+                  <td>Debit Card</td><td class="mono">Savings ···3292</td>
+                </tr>
+                <tr>
+                  <td>BESCOM</td>
+                  <td><span class="spill sp-deleted">Deleted</span></td>
+                  <td>26 Jun 2023</td><td>26 Jan 2023</td>
+                  <td>₹2,000.00</td><td>MAD</td>
+                  <td>UPI</td><td class="mono">Savings ···4817</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════ RELATIONSHIP PANE ══════════════ -->
+    <div id="pane-rel" style="display:none;flex-direction:column;flex:1;overflow:hidden;">
+      <div class="content-header">
+        <div class="content-title">HDFC Relationship – Anirudh AK</div>
+        <div class="content-acno">Customer ID: T721542-5445-459</div>
+        <div class="content-tabs">
+          <div class="ctab active" onclick="switchRelTab('accounts',this)">Accounts</div>
+          <div class="ctab" onclick="switchRelTab('cards',this)">Cards</div>
+        </div>
+      </div>
+      <div class="content-body">
+
+        <!-- ACCOUNTS TAB -->
+        <div id="rt-accounts" class="tab-pane active">
+          <div class="section-block">
+            <div class="section-head">Accounts</div>
+            <table class="dtable" style="width:100%;">
+              <thead>
+                <tr>
+                  <th>Account Number</th>
+                  <th>Type</th>
+                  <th>Status</th>
+                  <th>PayZapp Linked</th>
+                  <th>Active AutoPay</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Row 1 -->
+                <tr class="rel-acct-row" onclick="toggleRow(this,'acc-exp-1','7')">
+                  <td class="mono">XXXX XXXX XXXX 3292</td>
+                  <td>Savings</td>
+                  <td><span class="spill sp-active">Active</span></td>
+                  <td>✔ Yes &nbsp;<span style="font-size:9px;background:#dce8ff;color:#1a56c4;padding:1px 5px;border-radius:2px;font-weight:bold;">PRIMARY</span></td>
+                  <td>BESCOM, Pixel CC</td>
+                  <td style="color:#1a56c4;font-size:11px;text-align:center;" id="arr-acc-1">▼</td>
+                </tr>
+                <tr id="acc-exp-1" style="display:none;">
+                  <td colspan="6" style="padding:0;background:#f8f9fc;">
+                    <div class="rel-acct-expand">
+                      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                        <div>
+                          <div class="sec-label" style="margin-top:0;">Active AutoPay from this Account</div>
+                          <div class="section-block" style="margin:0;">
+                            <table class="dtable">
+                              <thead><tr><th>Biller</th><th>Instrument</th><th>Execute On</th><th>Status</th></tr></thead>
+                              <tbody>
+                                <tr><td>BESCOM</td><td>HDFC Account</td><td>Due Date</td><td><span class="spill sp-active">Active</span></td></tr>
+                                <tr><td>Pixel CC</td><td>HDFC Account</td><td>Due Date</td><td><span class="spill sp-failed">Failed</span></td></tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                        <div>
+                          <div class="sec-label" style="margin-top:0;display:flex;align-items:center;justify-content:space-between;">
+                            Recent Payments from this Account
+                            <a class="lnk" style="font-size:10px;font-weight:normal;text-transform:none;letter-spacing:0;display:flex;align-items:center;gap:3px;" href="#">
+                              View All
+                              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="display:inline-block;"><path d="M2 5h6M5.5 2.5L8 5l-2.5 2.5" stroke="#1a56c4" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </a>
+                          </div>
+                          <div class="section-block" style="margin:0;">
+                            <table class="dtable">
+                              <thead><tr><th>Date</th><th>Amount</th><th>Biller</th><th>AutoPay</th><th>Status</th></tr></thead>
+                              <tbody>
+                                <tr><td>26 Jun 2025</td><td>₹1,000.00</td><td>BESCOM</td><td>Yes</td><td><span class="spill sp-failed">Failed</span></td></tr>
+                                <tr><td>4 May 2025</td><td>₹1,000.00</td><td>BESCOM</td><td>Yes</td><td><span class="spill sp-completed">Completed</span></td></tr>
+                                <tr><td>4 Apr 2025</td><td>₹736.00</td><td>BESCOM</td><td>Yes</td><td><span class="spill sp-completed">Completed</span></td></tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <!-- Row 2 -->
+                <tr class="rel-acct-row" onclick="toggleRow(this,'acc-exp-2','6')">
+                  <td class="mono">XXXX XXXX XXXX 4817</td>
+                  <td>Savings</td>
+                  <td><span class="spill sp-active">Active</span></td>
+                  <td>✔ Yes</td>
+                  <td>—</td>
+                  <td style="color:#1a56c4;font-size:11px;text-align:center;" id="arr-acc-2">▼</td>
+                </tr>
+                <tr id="acc-exp-2" style="display:none;">
+                  <td colspan="6" style="padding:0;background:#f8f9fc;">
+                    <div class="rel-acct-expand" style="color:#888;font-size:11px;">No active autopay or recent payments from this account.</div>
+                  </td>
+                </tr>
+                <!-- Row 3 -->
+                <tr class="rel-acct-row" onclick="toggleRow(this,'acc-exp-3','6')">
+                  <td class="mono">XXXX XXXX XXXX 5403</td>
+                  <td>Current</td>
+                  <td><span class="spill sp-active">Active</span></td>
+                  <td>— Not Linked</td>
+                  <td>—</td>
+                  <td style="color:#1a56c4;font-size:11px;text-align:center;" id="arr-acc-3">▼</td>
+                </tr>
+                <tr id="acc-exp-3" style="display:none;">
+                  <td colspan="6" style="padding:0;background:#f8f9fc;">
+                    <div class="rel-acct-expand" style="color:#888;font-size:11px;">Account not linked to PayZapp. Autopay and payment history not available.</div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- CARDS TAB -->
+        <div id="rt-cards" class="tab-pane">
+
+          <!-- Credit Cards -->
+          <div class="section-block" style="margin-bottom:10px;">
+            <div class="section-head">Credit Cards</div>
+            <table class="dtable">
+              <thead>
+                <tr>
+                  <th>Card Number</th>
+                  <th>Card Name</th>
+                  <th>Status</th>
+                  <th>PayZapp Linked</th>
+                  <th>AutoPay</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="rel-acct-row" onclick="toggleRow(this,'card-exp-1','7')">
+                  <td class="mono">XXXX XXXX XXXX 4532</td>
+                  <td>HDFC Pixel Play CC</td>
+                  <td><span class="spill sp-active">Active</span></td>
+                  <td>✔ Yes</td>
+                  <td><span class="spill sp-failed">Failed</span></td>
+                  <td style="color:#1a56c4;font-size:11px;text-align:center;" id="arr-card-1">▼</td>
+                </tr>
+                <tr id="card-exp-1" style="display:none;">
+                  <td colspan="6" style="padding:0;background:#f8f9fc;">
+                    <div class="rel-acct-expand">
+                      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                        <div>
+                          <div class="sec-label" style="margin-top:0;">AutoPay for this Card</div>
+                          <div class="alert-err" style="margin-bottom:0;">
+                            <div class="alert-err-icon">⚠</div>
+                            <div>
+                              <div class="alert-err-title">AutoPay Failed – 26 Jun 2025</div>
+                              <div class="alert-err-desc">Reason: Insufficient Funds in linked HDFC Savings Account ···3292. Instrument: HDFC Account.</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <div class="sec-label" style="margin-top:0;">Recent Payments</div>
+                          <div class="section-block" style="margin:0;">
+                            <table class="dtable">
+                              <thead><tr><th>Date</th><th>Amount</th><th>Status</th><th>AutoPay</th></tr></thead>
+                              <tbody>
+                                <tr><td>26 Jun 2025</td><td>₹8,200.00</td><td><span class="spill sp-failed">Failed</span></td><td>Yes</td></tr>
+                                <tr><td>18 May 2025</td><td>₹6,500.00</td><td><span class="spill sp-completed">Completed</span></td><td>Yes</td></tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="rel-acct-row" onclick="toggleRow(this,'card-exp-2','6')">
+                  <td class="mono">XXXX XXXX XXXX 7821</td>
+                  <td>HDFC Millennia CC</td>
+                  <td><span class="spill sp-active">Active</span></td>
+                  <td>— Not Linked</td>
+                  <td>—</td>
+                  <td style="color:#1a56c4;font-size:11px;text-align:center;" id="arr-card-2">▼</td>
+                </tr>
+                <tr id="card-exp-2" style="display:none;">
+                  <td colspan="6" style="padding:0;background:#f8f9fc;">
+                    <div class="rel-acct-expand" style="color:#888;font-size:11px;">Card not linked to PayZapp. No autopay data available.</div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Debit Cards -->
+          <div class="section-block">
+            <div class="section-head">Debit Cards</div>
+            <table class="dtable">
+              <thead>
+                <tr>
+                  <th>Card Number</th>
+                  <th>Card Name</th>
+                  <th>Status</th>
+                  <th>PayZapp Linked</th>
+                  <th>AutoPay</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="rel-acct-row" onclick="toggleRow(this,'card-exp-3','6')">
+                  <td class="mono">XXXX XXXX XXXX 2944</td>
+                  <td>HDFC Platinum Debit</td>
+                  <td><span class="spill sp-active">Active</span></td>
+                  <td>— Not Linked</td>
+                  <td>—</td>
+                  <td style="color:#1a56c4;font-size:11px;text-align:center;" id="arr-card-3">▼</td>
+                </tr>
+                <tr id="card-exp-3" style="display:none;">
+                  <td colspan="6" style="padding:0;background:#f8f9fc;">
+                    <div class="rel-acct-expand" style="color:#888;font-size:11px;">Card not linked to PayZapp. No autopay data available.</div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- PLACEHOLDER PANES -->
+    <div id="pane-account" style="display:none;padding:20px;color:#888;">Account Holder panel</div>
+    <div id="pane-bundles" style="display:none;padding:20px;color:#888;">Bundles panel</div>
+    <div id="pane-transactions" style="display:none;padding:20px;color:#888;">Transactions panel</div>
+
+  </div>
+</div>
+
+<script>
+// Main tab switch
+function switchMain(name, el) {
+  document.querySelectorAll('.subnav-item').forEach(e=>e.classList.remove('active'));
+  el.classList.add('active');
+  var all = ['rcbp','rel','account','bundles','transactions'];
+  all.forEach(function(n){
+    var p = document.getElementById('pane-'+n);
+    if(!p) return;
+    p.style.display = 'none';
+  });
+  var target = document.getElementById('pane-'+name);
+  if(target) target.style.display = (name==='rcbp'||name==='rel') ? 'flex' : 'block';
+}
+
+// RCBP content tab switch
+function switchCTab(name, el) {
+  document.querySelectorAll('#pane-rcbp .ctab').forEach(e=>e.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('#ct-details,#ct-history,#ct-autopay').forEach(e=>e.classList.remove('active'));
+  document.getElementById('ct-'+name).classList.add('active');
+}
+
+// Relationship tab switch
+function switchRelTab(name, el) {
+  document.querySelectorAll('#pane-rel .ctab').forEach(e=>e.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('#rt-accounts,#rt-cards').forEach(e=>e.classList.remove('active'));
+  document.getElementById('rt-'+name).classList.add('active');
+}
+
+// Biller select
+var billerData = {
+  pixel:    { title:'HDFC Pixel Credit Card', acno:'4072534-5645-5646', failed:true  },
+  bescom:   { title:'BESCOM',                 acno:'1231231231928',      failed:true  },
+  vodafone: { title:'Vodafone Idea',           acno:'0270331985',         failed:false }
+};
+function selectBiller(el, name) {
+  document.querySelectorAll('.biller-row').forEach(e=>e.classList.remove('active'));
+  el.classList.add('active');
+  var d = billerData[name];
+  document.getElementById('rcbp-title').textContent = d.title;
+  document.getElementById('rcbp-acno').textContent  = 'Account number: '+d.acno;
+  var alert = document.getElementById('det-alert');
+  var badge = document.getElementById('ap-fail-badge');
+  if(alert) alert.style.display = d.failed ? 'flex' : 'none';
+  if(badge) badge.style.display = d.failed ? 'inline' : 'none';
+  switchMain('rcbp', document.getElementById('nav-rcbp'));
+}
+
+// Expandable rows
+function toggleRow(row, expId, colspan) {
+  var exp = document.getElementById(expId);
+  if(!exp) return;
+  var isOpen = exp.style.display !== 'none';
+  // find arrow cell (last td in trigger row)
+  var cells = row.querySelectorAll('td');
+  var arrowCell = cells[cells.length-1];
+  if(isOpen) {
+    exp.style.display = 'none';
+    row.classList.remove('selected');
+    arrowCell.textContent = '▼';
+  } else {
+    exp.style.display = 'table-row';
+    row.classList.add('selected');
+    arrowCell.textContent = '▲';
+  }
+}
+</script>
+</body>
+</html>
