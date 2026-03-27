@@ -145,6 +145,45 @@ body { font-family: Arial, sans-serif; font-size:12px; background:#f0f2f5; color
 .rel-acct-row.selected td { background:#ebf0f9 !important; }
 .rel-acct-expand { background:#f8f9fc; border-top:1px solid #e8edf5; padding:12px 14px; }
 
+/* ACTION BUTTONS */
+.btn { display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:3px; font-size:10.5px; font-weight:bold; cursor:pointer; border:none; white-space:nowrap; }
+.btn-primary { background:#1c3664; color:#fff; }
+.btn-primary:hover { background:#16305a; }
+.btn-secondary { background:#fff; color:#1c3664; border:1px solid #1c3664; }
+.btn-secondary:hover { background:#eef3fb; }
+.btn-sm { padding:3px 8px; font-size:10px; }
+.btn-link { background:none; border:none; color:#1a56c4; font-size:10.5px; padding:0; cursor:pointer; text-decoration:underline; font-weight:normal; }
+.btn:disabled { opacity:0.5; cursor:not-allowed; }
+
+/* REASON TAG */
+.reason-tag { display:inline-flex; align-items:center; gap:4px; font-size:10px; color:#b45309; background:#fff4e0; border:1px solid #fde68a; border-radius:3px; padding:2px 7px; font-weight:600; white-space:nowrap; }
+.reason-tag.error { color:#c0392b; background:#fde8e8; border-color:#fca5a5; }
+
+/* MODAL OVERLAY */
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:1000; align-items:center; justify-content:center; }
+.modal-overlay.open { display:flex; }
+.modal-box { background:#fff; border-radius:4px; width:480px; max-width:95vw; box-shadow:0 8px 32px rgba(0,0,0,0.2); overflow:hidden; }
+.modal-head { padding:12px 16px; background:#f4f6fa; border-bottom:1px solid #dde3ec; display:flex; align-items:center; justify-content:space-between; }
+.modal-title { font-size:13px; font-weight:bold; color:#1c3664; }
+.modal-close { font-size:18px; color:#888; cursor:pointer; line-height:1; background:none; border:none; }
+.modal-body { padding:16px; }
+.modal-footer { padding:10px 16px; border-top:1px solid #dde3ec; display:flex; align-items:center; justify-content:flex-end; gap:8px; background:#fafbfc; }
+
+/* DISCOVERY STATUS */
+.disc-step { display:flex; align-items:flex-start; gap:10px; padding:8px 0; border-bottom:1px solid #f0f2f5; }
+.disc-step:last-child { border:none; }
+.disc-dot { width:20px; height:20px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:bold; margin-top:1px; }
+.disc-dot.pending  { background:#e8edf5; color:#888; }
+.disc-dot.running  { background:#fff4e0; color:#b45309; }
+.disc-dot.done     { background:#e6f4ea; color:#1a7e34; }
+.disc-dot.failed   { background:#fde8e8; color:#c0392b; }
+.disc-info { flex:1; }
+.disc-label { font-size:11.5px; font-weight:bold; color:#1a1a1a; }
+.disc-sub   { font-size:10.5px; color:#888; margin-top:2px; }
+.disc-sub.err { color:#c0392b; }
+.spinner { width:12px; height:12px; border:2px solid #e0e4ea; border-top-color:#1c3664; border-radius:50%; animation:spin 0.7s linear infinite; display:inline-block; }
+@keyframes spin { to { transform:rotate(360deg); } }
+
 /* HIDDEN */
 .tab-pane { display:none; }
 .tab-pane.active { display:block; }
@@ -205,7 +244,7 @@ body { font-family: Arial, sans-serif; font-size:12px; background:#f0f2f5; color
   <!-- LEFT PANEL -->
   <div class="left-panel">
     <div class="left-panel-header">
-      User Biller Account <span class="left-panel-count">3</span>
+      Active Billers <span class="left-panel-count">3</span>
     </div>
     <input class="left-search" placeholder="Search..." type="text">
 
@@ -213,8 +252,7 @@ body { font-family: Arial, sans-serif; font-size:12px; background:#f0f2f5; color
       <div class="biller-name">HDFC Pixel Credit Card</div>
       <div class="biller-acno">4072534-5645-5646</div>
       <div class="biller-tags">
-        <span class="btag btag-biller">BILLER</span>
-        <span class="btag btag-failed">⚠ AUTOPAY FAILED</span>
+        <span class="btag" style="background:#ede9fe;color:#5b21b6;">BOTH</span>
       </div>
     </div>
 
@@ -223,6 +261,7 @@ body { font-family: Arial, sans-serif; font-size:12px; background:#f0f2f5; color
       <div class="biller-acno">1231231231928</div>
       <div class="biller-tags">
         <span class="btag btag-biller">BILLER</span>
+        <span class="btag btag-failed">⚠ AUTOPAY FAILED</span>
       </div>
     </div>
 
@@ -565,15 +604,6 @@ body { font-family: Arial, sans-serif; font-size:12px; background:#f0f2f5; color
                   <td class="mono">Savings ···3292</td>
                   <td>₹736.00 debited</td>
                 </tr>
-                <tr style="background:#fff9f9;">
-                  <td>15 Jan 2024, 16:44</td>
-                  <td><span class="spill sp-failed">Setup Failed</span></td>
-                  <td>—</td>
-                  <td>Customer (App)</td>
-                  <td>HDFC Account</td>
-                  <td class="mono">Savings ···4817</td>
-                  <td>AutoPay setup failed – account deregistered from PayZapp at time of setup</td>
-                </tr>
                 <tr>
                   <td>26 Jun 2023, 11:42</td>
                   <td><span class="spill sp-active">AutoPay Created</span></td>
@@ -582,6 +612,15 @@ body { font-family: Arial, sans-serif; font-size:12px; background:#f0f2f5; color
                   <td>HDFC Account</td>
                   <td class="mono">Savings ···3292</td>
                   <td>Max ₹5,000 · Bill Amount · Due Date</td>
+                </tr>
+                <tr style="background:#fff9f9;">
+                  <td>15 Jan 2023, 16:44</td>
+                  <td><span class="spill sp-failed">Setup Failed</span></td>
+                  <td>—</td>
+                  <td>Customer (App)</td>
+                  <td>HDFC Account</td>
+                  <td class="mono">Savings ···4817</td>
+                  <td>AutoPay setup failed – account deregistered from PayZapp at time of setup</td>
                 </tr>
               </tbody>
             </table>
@@ -639,8 +678,19 @@ body { font-family: Arial, sans-serif; font-size:12px; background:#f0f2f5; color
 
         <!-- ACCOUNTS TAB -->
         <div id="rt-accounts" class="tab-pane active">
+
+          <!-- Discovery action bar -->
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <div style="font-size:11px;color:#555;">Showing all HDFC accounts for this customer. Last discovery: <strong>24 Mar 2026, 09:14 AM</strong></div>
+            <button class="btn btn-secondary btn-sm" onclick="openDiscoveryModal('accounts')" style="display:flex;align-items:center;gap:5px;">
+              <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M10.5 6A4.5 4.5 0 1 1 6 1.5" stroke="#1c3664" stroke-width="1.4" stroke-linecap="round"/><path d="M10.5 1.5v3h-3" stroke="#1c3664" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Re-trigger Discovery &amp; Linking
+            </button>
+          </div>
+
+          <!-- Linked accounts -->
           <div class="section-block">
-            <div class="section-head">Accounts</div>
+            <div class="section-head">Linked Accounts <span style="font-size:10px;font-weight:normal;color:#1a7e34;margin-left:6px;">✔ 2 linked to PayZapp</span></div>
             <table class="dtable" style="width:100%;">
               <thead>
                 <tr>
@@ -654,7 +704,7 @@ body { font-family: Arial, sans-serif; font-size:12px; background:#f0f2f5; color
               </thead>
               <tbody>
                 <!-- Row 1 -->
-                <tr class="rel-acct-row" onclick="toggleRow(this,'acc-exp-1','7')">
+                <tr class="rel-acct-row" onclick="toggleRow(this,'acc-exp-1','6')">
                   <td class="mono">XXXX XXXX XXXX 3292</td>
                   <td>Savings</td>
                   <td><span class="spill sp-active">Active</span></td>
@@ -715,31 +765,60 @@ body { font-family: Arial, sans-serif; font-size:12px; background:#f0f2f5; color
                     <div class="rel-acct-expand" style="color:#888;font-size:11px;">No active autopay or recent payments from this account.</div>
                   </td>
                 </tr>
-                <!-- Row 3 -->
-                <tr class="rel-acct-row" onclick="toggleRow(this,'acc-exp-3','6')">
+              </tbody>
+            </table>
+          </div>
+
+          <!-- NOT LINKED / FILTERED OUT accounts -->
+          <div class="section-block">
+            <div class="section-head" style="background:#fffbf0;border-color:#fde68a;">
+              <span>Not Linked / Filtered Out <span style="font-size:10px;font-weight:normal;color:#b45309;margin-left:6px;">1 account could not be linked</span></span>
+              <button class="btn btn-sm" onclick="openDiscoveryModal('account-5403')" style="background:#fff4e0;color:#b45309;border:1px solid #fde68a;display:flex;align-items:center;gap:4px;">
+                <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M10.5 6A4.5 4.5 0 1 1 6 1.5" stroke="#b45309" stroke-width="1.4" stroke-linecap="round"/><path d="M10.5 1.5v3h-3" stroke="#b45309" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Re-trigger Linking
+              </button>
+            </div>
+            <table class="dtable">
+              <thead>
+                <tr>
+                  <th>Account Number</th>
+                  <th>Type</th>
+                  <th>Status</th>
+                  <th>Reason Not Linked</th>
+                  <th>Last Attempted</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
                   <td class="mono">XXXX XXXX XXXX 5403</td>
                   <td>Current</td>
                   <td><span class="spill sp-active">Active</span></td>
-                  <td>— Not Linked</td>
-                  <td>—</td>
-                  <td style="color:#1a56c4;font-size:11px;text-align:center;" id="arr-acc-3">▼</td>
-                </tr>
-                <tr id="acc-exp-3" style="display:none;">
-                  <td colspan="6" style="padding:0;background:#f8f9fc;">
-                    <div class="rel-acct-expand" style="color:#888;font-size:11px;">Account not linked to PayZapp. Autopay and payment history not available.</div>
-                  </td>
+                  <td><span class="reason-tag error">Product Code Mismatch</span></td>
+                  <td>24 Mar 2026, 09:14 AM</td>
+                  <td><button class="btn btn-secondary btn-sm" onclick="openDiscoveryModal('account-5403')">Re-trigger Linking</button></td>
                 </tr>
               </tbody>
             </table>
           </div>
+
         </div>
 
         <!-- CARDS TAB -->
         <div id="rt-cards" class="tab-pane">
 
-          <!-- Credit Cards -->
+          <!-- Discovery action bar -->
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <div style="font-size:11px;color:#555;">Showing all HDFC cards for this customer. Last discovery: <strong>24 Mar 2026, 09:14 AM</strong></div>
+            <button class="btn btn-secondary btn-sm" onclick="openDiscoveryModal('cards')" style="display:flex;align-items:center;gap:5px;">
+              <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M10.5 6A4.5 4.5 0 1 1 6 1.5" stroke="#1c3664" stroke-width="1.4" stroke-linecap="round"/><path d="M10.5 1.5v3h-3" stroke="#1c3664" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Re-trigger Discovery &amp; Linking
+            </button>
+          </div>
+
+          <!-- Linked Credit Cards -->
           <div class="section-block" style="margin-bottom:10px;">
-            <div class="section-head">Credit Cards</div>
+            <div class="section-head">Credit Cards – Linked <span style="font-size:10px;font-weight:normal;color:#1a7e34;margin-left:6px;">✔ 1 linked to PayZapp</span></div>
             <table class="dtable">
               <thead>
                 <tr>
@@ -752,7 +831,7 @@ body { font-family: Arial, sans-serif; font-size:12px; background:#f0f2f5; color
                 </tr>
               </thead>
               <tbody>
-                <tr class="rel-acct-row" onclick="toggleRow(this,'card-exp-1','7')">
+                <tr class="rel-acct-row" onclick="toggleRow(this,'card-exp-1','6')">
                   <td class="mono">XXXX XXXX XXXX 4532</td>
                   <td>HDFC Pixel Play CC</td>
                   <td><span class="spill sp-active">Active</span></td>
@@ -790,50 +869,82 @@ body { font-family: Arial, sans-serif; font-size:12px; background:#f0f2f5; color
                     </div>
                   </td>
                 </tr>
-                <tr class="rel-acct-row" onclick="toggleRow(this,'card-exp-2','6')">
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Not Linked Credit Cards -->
+          <div class="section-block" style="margin-bottom:10px;">
+            <div class="section-head" style="background:#fffbf0;border-color:#fde68a;">
+              <span>Credit Cards – Not Linked / Filtered Out <span style="font-size:10px;font-weight:normal;color:#b45309;margin-left:6px;">1 card could not be linked</span></span>
+              <button class="btn btn-sm" onclick="openDiscoveryModal('card-7821')" style="background:#fff4e0;color:#b45309;border:1px solid #fde68a;display:flex;align-items:center;gap:4px;">
+                <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M10.5 6A4.5 4.5 0 1 1 6 1.5" stroke="#b45309" stroke-width="1.4" stroke-linecap="round"/><path d="M10.5 1.5v3h-3" stroke="#b45309" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Re-trigger Linking
+              </button>
+            </div>
+            <table class="dtable">
+              <thead>
+                <tr><th>Card Number</th><th>Card Name</th><th>Status</th><th>Reason Not Linked</th><th>Last Attempted</th><th>Action</th></tr>
+              </thead>
+              <tbody>
+                <tr>
                   <td class="mono">XXXX XXXX XXXX 7821</td>
                   <td>HDFC Millennia CC</td>
                   <td><span class="spill sp-active">Active</span></td>
-                  <td>— Not Linked</td>
-                  <td>—</td>
-                  <td style="color:#1a56c4;font-size:11px;text-align:center;" id="arr-card-2">▼</td>
-                </tr>
-                <tr id="card-exp-2" style="display:none;">
-                  <td colspan="6" style="padding:0;background:#f8f9fc;">
-                    <div class="rel-acct-expand" style="color:#888;font-size:11px;">Card not linked to PayZapp. No autopay data available.</div>
-                  </td>
+                  <td><span class="reason-tag">PAN Mismatch</span></td>
+                  <td>24 Mar 2026, 09:14 AM</td>
+                  <td><button class="btn btn-secondary btn-sm" onclick="openDiscoveryModal('card-7821')">Re-trigger Linking</button></td>
                 </tr>
               </tbody>
             </table>
           </div>
 
-          <!-- Debit Cards -->
-          <div class="section-block">
-            <div class="section-head">Debit Cards</div>
+          <!-- Debit Cards – Linked -->
+          <div class="section-block" style="margin-bottom:10px;">
+            <div class="section-head">Debit Cards – Linked <span style="font-size:10px;font-weight:normal;color:#1a7e34;margin-left:6px;">✔ 1 linked to PayZapp</span></div>
             <table class="dtable">
               <thead>
-                <tr>
-                  <th>Card Number</th>
-                  <th>Card Name</th>
-                  <th>Status</th>
-                  <th>PayZapp Linked</th>
-                  <th>AutoPay</th>
-                  <th></th>
-                </tr>
+                <tr><th>Card Number</th><th>Card Name</th><th>Status</th><th>PayZapp Linked</th><th>AutoPay</th><th></th></tr>
               </thead>
               <tbody>
                 <tr class="rel-acct-row" onclick="toggleRow(this,'card-exp-3','6')">
                   <td class="mono">XXXX XXXX XXXX 2944</td>
                   <td>HDFC Platinum Debit</td>
                   <td><span class="spill sp-active">Active</span></td>
-                  <td>— Not Linked</td>
+                  <td>✔ Yes</td>
                   <td>—</td>
                   <td style="color:#1a56c4;font-size:11px;text-align:center;" id="arr-card-3">▼</td>
                 </tr>
                 <tr id="card-exp-3" style="display:none;">
                   <td colspan="6" style="padding:0;background:#f8f9fc;">
-                    <div class="rel-acct-expand" style="color:#888;font-size:11px;">Card not linked to PayZapp. No autopay data available.</div>
+                    <div class="rel-acct-expand" style="color:#888;font-size:11px;">No autopay setup on this debit card. No recent payment history.</div>
                   </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Debit Cards – Not Linked -->
+          <div class="section-block">
+            <div class="section-head" style="background:#fffbf0;border-color:#fde68a;">
+              <span>Debit Cards – Not Linked / Filtered Out <span style="font-size:10px;font-weight:normal;color:#b45309;margin-left:6px;">1 card could not be linked</span></span>
+              <button class="btn btn-sm" onclick="openDiscoveryModal('card-6614')" style="background:#fff4e0;color:#b45309;border:1px solid #fde68a;display:flex;align-items:center;gap:4px;">
+                <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M10.5 6A4.5 4.5 0 1 1 6 1.5" stroke="#b45309" stroke-width="1.4" stroke-linecap="round"/><path d="M10.5 1.5v3h-3" stroke="#b45309" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Re-trigger Linking
+              </button>
+            </div>
+            <table class="dtable">
+              <thead>
+                <tr><th>Card Number</th><th>Card Name</th><th>Status</th><th>Reason Not Linked</th><th>Last Attempted</th><th>Action</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="mono">XXXX XXXX XXXX 6614</td>
+                  <td>HDFC EasyShop Debit</td>
+                  <td><span class="spill sp-active">Active</span></td>
+                  <td><span class="reason-tag error">Product Code Mismatch</span></td>
+                  <td>24 Mar 2026, 09:14 AM</td>
+                  <td><button class="btn btn-secondary btn-sm" onclick="openDiscoveryModal('card-6614')">Re-trigger Linking</button></td>
                 </tr>
               </tbody>
             </table>
@@ -851,6 +962,93 @@ body { font-family: Arial, sans-serif; font-size:12px; background:#f0f2f5; color
   </div>
 </div>
 
+<!-- ══════════════ DISCOVERY MODAL ══════════════ -->
+<div class="modal-overlay" id="discovery-modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <span class="modal-title" id="modal-title">Re-trigger Discovery &amp; Linking</span>
+      <button class="modal-close" onclick="closeDiscoveryModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div id="modal-pre-run">
+        <div style="font-size:11.5px;color:#333;margin-bottom:12px;">
+          This will re-trigger account/card discovery and linking for <strong>Anirudh AK</strong> on PayZapp. The system will attempt to resolve the linking failure and re-match the instrument.
+        </div>
+        <div style="background:#f8f9fc;border:1px solid #dde3ec;border-radius:3px;padding:10px 12px;margin-bottom:12px;">
+          <div style="font-size:10.5px;font-weight:bold;color:#555;text-transform:uppercase;letter-spacing:0.3px;margin-bottom:8px;">What will be attempted</div>
+          <div class="disc-step">
+            <div class="disc-dot pending">1</div>
+            <div class="disc-info"><div class="disc-label">Customer Identity Verification</div><div class="disc-sub">Re-validate PAN, mobile, CIF against PayZapp registration</div></div>
+          </div>
+          <div class="disc-step">
+            <div class="disc-dot pending">2</div>
+            <div class="disc-info"><div class="disc-label">Account / Card Linking</div><div class="disc-sub">Re-link customer accounts and cards to PayZapp</div></div>
+          </div>
+        </div>
+        <div style="font-size:10.5px;color:#888;">This action will be logged in the audit trail. The customer does not need to take any action.</div>
+      </div>
+
+      <!-- Running state -->
+      <div id="modal-running" style="display:none;">
+        <div style="font-size:11.5px;color:#333;margin-bottom:12px;">Linking in progress…</div>
+        <div style="background:#f8f9fc;border:1px solid #dde3ec;border-radius:3px;padding:10px 12px;">
+          <div class="disc-step" id="step-1-row">
+            <div class="disc-dot running" id="step-1-dot"><div class="spinner"></div></div>
+            <div class="disc-info"><div class="disc-label">Customer Identity Verification</div><div class="disc-sub" id="step-1-sub">Validating PAN and CIF…</div></div>
+          </div>
+          <div class="disc-step" id="step-2-row">
+            <div class="disc-dot pending" id="step-2-dot">2</div>
+            <div class="disc-info"><div class="disc-label">Account / Card Linking</div><div class="disc-sub" id="step-2-sub">Waiting…</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Result state -->
+      <div id="modal-result" style="display:none;">
+        <div id="result-success" style="display:none;">
+          <div style="display:flex;align-items:center;gap:10px;padding:12px;background:#e6f4ea;border:1px solid #a8d5b5;border-radius:3px;margin-bottom:12px;">
+            <span style="font-size:20px;">✔</span>
+            <div>
+              <div style="font-size:12px;font-weight:bold;color:#1a7e34;">Linking Successful</div>
+              <div style="font-size:10.5px;color:#155724;margin-top:2px;">The instrument has been successfully linked to PayZapp. Refreshing relationship view…</div>
+            </div>
+          </div>
+        </div>
+        <div id="result-failure" style="display:none;">
+          <div style="display:flex;align-items:center;gap:10px;padding:12px;background:#fde8e8;border:1px solid #f5aaaa;border-radius:3px;margin-bottom:12px;">
+            <span style="font-size:20px;">✖</span>
+            <div>
+              <div style="font-size:12px;font-weight:bold;color:#c0392b;">Linking Failed</div>
+              <div style="font-size:10.5px;color:#7f1d1d;margin-top:2px;" id="result-failure-reason">The same error persists. Please check the details below and raise a service request if needed.</div>
+            </div>
+          </div>
+          <div style="background:#f8f9fc;border:1px solid #dde3ec;border-radius:3px;padding:10px 12px;">
+            <div style="font-size:10.5px;font-weight:bold;color:#555;margin-bottom:6px;">Step-by-step result</div>
+            <div class="disc-step">
+              <div class="disc-dot done">✔</div>
+              <div class="disc-info"><div class="disc-label">Customer Identity Verification</div><div class="disc-sub">PAN and CIF matched successfully</div></div>
+            </div>
+            <div class="disc-step">
+              <div class="disc-dot failed">✖</div>
+              <div class="disc-info"><div class="disc-label">Account / Card Linking</div><div class="disc-sub err" id="result-fail-step-reason">Linking failed – product code not eligible for PayZapp.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer" id="modal-footer-pre">
+      <button class="btn btn-secondary btn-sm" onclick="closeDiscoveryModal()">Cancel</button>
+      <button class="btn btn-primary btn-sm" id="run-btn" onclick="runDiscovery()">Run Discovery &amp; Linking</button>
+    </div>
+    <div class="modal-footer" id="modal-footer-running" style="display:none;">
+      <span style="font-size:11px;color:#888;">Please wait…</span>
+    </div>
+    <div class="modal-footer" id="modal-footer-result" style="display:none;">
+      <button class="btn btn-secondary btn-sm" onclick="closeDiscoveryModal()">Close</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // Main tab switch
 function switchMain(name, el) {
@@ -864,6 +1062,8 @@ function switchMain(name, el) {
   });
   var target = document.getElementById('pane-'+name);
   if(target) target.style.display = (name==='rcbp'||name==='rel') ? 'flex' : 'block';
+  // Show/hide left panel – only visible on RCBP
+  document.querySelector('.left-panel').style.display = (name === 'rcbp') ? 'flex' : 'none';
 }
 
 // RCBP content tab switch
@@ -906,7 +1106,6 @@ function toggleRow(row, expId, colspan) {
   var exp = document.getElementById(expId);
   if(!exp) return;
   var isOpen = exp.style.display !== 'none';
-  // find arrow cell (last td in trigger row)
   var cells = row.querySelectorAll('td');
   var arrowCell = cells[cells.length-1];
   if(isOpen) {
@@ -918,6 +1117,88 @@ function toggleRow(row, expId, colspan) {
     row.classList.add('selected');
     arrowCell.textContent = '▲';
   }
+}
+
+// Discovery modal
+var currentDiscoveryTarget = '';
+var discoveryOutcomes = {
+  'accounts':     { success: false, failReason: 'Linking failed – product code not eligible for PayZapp.' },
+  'account-5403': { success: false, failReason: 'Linking failed – product code not eligible for PayZapp.' },
+  'cards':        { success: false, failReason: 'Linking failed – PAN on CBS record does not match PayZapp registered PAN. Customer must update PAN via branch.' },
+  'card-7821':    { success: false, failReason: 'Linking failed – PAN on CBS record does not match PayZapp registered PAN. Customer must update PAN via branch.' },
+  'card-6614':    { success: false, failReason: 'Linking failed – product code not eligible for PayZapp.' }
+};
+
+function openDiscoveryModal(target) {
+  currentDiscoveryTarget = target;
+  var titles = {
+    'accounts':     'Re-trigger Discovery & Linking – All Accounts',
+    'account-5403': 'Re-trigger Linking – Account ···5403',
+    'cards':        'Re-trigger Discovery & Linking – All Cards',
+    'card-7821':    'Re-trigger Linking – Millennia CC ···7821',
+    'card-6614':    'Re-trigger Linking – EasyShop Debit ···6614'
+  };
+  document.getElementById('modal-title').textContent = titles[target] || 'Re-trigger Discovery & Linking';
+  document.getElementById('modal-pre-run').style.display = 'block';
+  document.getElementById('modal-running').style.display = 'none';
+  document.getElementById('modal-result').style.display = 'none';
+  document.getElementById('modal-footer-pre').style.display = 'flex';
+  document.getElementById('modal-footer-running').style.display = 'none';
+  document.getElementById('modal-footer-result').style.display = 'none';
+  document.getElementById('discovery-modal').classList.add('open');
+}
+
+function closeDiscoveryModal() {
+  document.getElementById('discovery-modal').classList.remove('open');
+}
+
+function runDiscovery() {
+  document.getElementById('modal-pre-run').style.display = 'none';
+  document.getElementById('modal-running').style.display = 'block';
+  document.getElementById('modal-footer-pre').style.display = 'none';
+  document.getElementById('modal-footer-running').style.display = 'flex';
+
+  var steps = [
+    { dot:'step-1-dot', sub:'step-1-sub', doneText:'PAN and CIF matched successfully', runText:'Validating PAN and CIF…' },
+    { dot:'step-2-dot', sub:'step-2-sub', doneText:'Accounts and cards linked to PayZapp', runText:'Re-linking accounts and cards…' }
+  ];
+
+  var outcome = discoveryOutcomes[currentDiscoveryTarget] || { success: false, failReason: 'Unknown error.' };
+  var failAtStep = outcome.success ? -1 : 1;
+
+  function runStep(i) {
+    if(i >= steps.length) { showResult(true); return; }
+    var s = steps[i];
+    var dot = document.getElementById(s.dot);
+    var sub = document.getElementById(s.sub);
+    dot.innerHTML = '<div class="spinner"></div>';
+    dot.className = 'disc-dot running';
+    sub.textContent = s.runText;
+    setTimeout(function() {
+      if(i === failAtStep && !outcome.success) {
+        dot.innerHTML = '✖';
+        dot.className = 'disc-dot failed';
+        sub.textContent = outcome.failReason;
+        document.getElementById('result-fail-step-reason').textContent = outcome.failReason;
+        showResult(false);
+      } else {
+        dot.innerHTML = '✔';
+        dot.className = 'disc-dot done';
+        sub.textContent = s.doneText;
+        runStep(i+1);
+      }
+    }, 900 + Math.random()*400);
+  }
+  runStep(0);
+}
+
+function showResult(success) {
+  document.getElementById('modal-running').style.display = 'none';
+  document.getElementById('modal-result').style.display = 'block';
+  document.getElementById('modal-footer-running').style.display = 'none';
+  document.getElementById('modal-footer-result').style.display = 'flex';
+  document.getElementById('result-success').style.display = success ? 'block' : 'none';
+  document.getElementById('result-failure').style.display = success ? 'none' : 'block';
 }
 </script>
 </body>
